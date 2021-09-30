@@ -1,0 +1,35 @@
+name: Auto Fetch From Upstream
+on:
+  schedule:
+    - cron:  0 1 * * *
+  workflow_dispatch:
+jobs:
+  sync_with_upstream:
+    runs-on: ubuntu-latest
+    name: Sync main with upstream latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v2
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Pull upstream changes
+        id: sync
+        uses: aormsby/Fork-Sync-With-Upstream-action@v3.0
+        with:
+          target_sync_branch: main
+          upstream_sync_repo: vizard-xi/pharmacy-2021
+          upstream_sync_branch: main
+          target_repo_token: '${{ secrets.GIT_TOKEN }}'
+
+      - name: New commits found
+        if: steps.sync.outputs.has_new_commits == 'true'
+        run: echo "New commits were found to sync."
+
+      - name: No new commits
+        if: steps.sync.outputs.has_new_commits == 'false'
+        run: echo "There were no new commits."
+
+      - name: Show value of 'has_new_commits'
+        run: echo ${{ steps.sync.outputs.has_new_commits }}
