@@ -1,0 +1,11 @@
+# Default ignored files
+/shelf/
+.idea/*
+
+user-service/.idea/*
+user-service/build/*
+user-service/.gradle/*
+
+sales-report-service/.idea/*
+sales-report-service/build/*
+sales-report-service/.gradle/*
